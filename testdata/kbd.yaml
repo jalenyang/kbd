@@ -1,0 +1,6 @@
+appName: kdb
+appVersion: 0.0.1
+realms:
+  - name: kind-docker-desktop
+    desc: kind k8s cluster
+    kubeConfig: config
