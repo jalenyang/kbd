@@ -3,24 +3,9 @@ package main
 import (
 	"flag"
 	"fmt"
-	"kbd/config"
 	"kbd/e2e"
 	"kbd/helm"
 	rlm "kbd/realm"
-)
-
-var (
-	kbdConfig config.KbdConfig
-)
-
-var (
-	realm     string
-	save      bool
-	install   bool
-	uninstall bool
-	upgrade   bool
-	rollback  bool
-	use       string
 )
 
 var Usage = func() {
@@ -42,11 +27,6 @@ func init() {
 func main() {
 	flag.Parse()
 	action := flag.Arg(0)
-	var err error
-	kbdConfig, err = config.LoadFromConfigFile("kbd.yaml")
-	if err != nil {
-		panic("Failed to parse the configuration file")
-	}
 
 	switch action {
 	case "e2e":
@@ -58,6 +38,7 @@ func main() {
 		break
 	case "realm":
 		rlm.CreateRealmFlagSet(flag.Args()[1:])
+		rlm.RealManager()
 		break
 	default:
 		flag.Usage()

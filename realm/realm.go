@@ -3,18 +3,15 @@ package realm
 import (
 	"flag"
 	"fmt"
+	"kbd/config"
+	"kbd/module"
 	"log"
 )
 
 var (
-	ram Realm
+	list string
+	ram  module.Realm
 )
-
-type Realm struct {
-	Name       string `yaml:"name"`
-	Desc       string `yaml:"desc"`
-	KubeConfig string `yaml:"kubeConfig"`
-}
 
 var Usage = func() {
 	flagOutput := flag.CommandLine.Output()
@@ -22,8 +19,9 @@ var Usage = func() {
 	fmt.Fprintln(flagOutput, "realms management of kbd, one realm is one k8s context")
 	fmt.Fprintln(flagOutput, "Options:")
 	fmt.Fprintln(flagOutput, "Commands:")
-	fmt.Fprintln(flagOutput, "	set	create or update a realm")
+	fmt.Fprintln(flagOutput, "	ls	list the realms")
 	fmt.Fprintln(flagOutput, "	rm	remove a realm")
+	fmt.Fprintln(flagOutput, "	set	create or update a realm")
 	fmt.Fprintln(flagOutput, "	use	active the realm")
 }
 
@@ -36,6 +34,9 @@ func CreateRealmFlagSet(args []string) {
 	}
 	action := args[0]
 	switch action {
+	case "ls":
+		fs.StringVar(&list, "ls", "all", "list the realms")
+		break
 	case "rm":
 		fs.StringVar(&ram.Name, "name", "", "name of the realm")
 		break
@@ -53,15 +54,35 @@ func CreateRealmFlagSet(args []string) {
 	fs.Parse(args[1:])
 }
 
-func getAllRealms() ([]Realm, error) {
-	return nil, nil
+func ListRealms() ([]string, error) {
+
+	kbdConfig, err := config.LoadFromConfigFile("kbd.yaml")
+	if err != nil {
+		panic("Failed to parse the configuration file")
+	}
+	var realNames []string
+	for _, realm := range kbdConfig.Realms {
+		fmt.Println("Available realms:")
+		if realm.Active {
+			fmt.Println("*" + realm.Name)
+		} else {
+			fmt.Println(realm.Name)
+		}
+	}
+	return realNames, nil
 }
 
-func createRealm(realm Realm) error {
+func createRealm(realm module.Realm) error {
 	if realm.Name == "" || realm.KubeConfig == "" {
 		log.Println("Invalid realm, realm name and kubeconfig can't be empty")
 	}
 	//realms := append(kbdConfig.realms, realm)
 	//kbdConfig.realms = realms
 	return nil
+}
+
+func RealManager() {
+	if "all" == list {
+		ListRealms()
+	}
 }

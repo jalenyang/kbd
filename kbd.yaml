@@ -4,3 +4,4 @@ realms:
   - name: kind-docker-desktop
     desc: "kind k8s cluster"
     kubeConfig: config
+    active: true

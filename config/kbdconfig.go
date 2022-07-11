@@ -3,21 +3,15 @@ package config
 import (
 	"gopkg.in/yaml.v3"
 	"io/ioutil"
-	rlm "kbd/realm"
+	"kbd/module"
 	"log"
 	"os"
 )
 
-var kbdConfig KbdConfig
-
-type KbdConfig struct {
-	AppName    string      `yaml:"appName"`
-	AppVersion string      `yaml:"appVersion"`
-	Realms     []rlm.Realm `yaml:"realms"`
-}
+var kbdConfig module.KbdConfig
 
 // LoadFromConfigFile parseConfig load the app config
-func LoadFromConfigFile(configFile string) (KbdConfig, error) {
+func LoadFromConfigFile(configFile string) (module.KbdConfig, error) {
 	fi, err := os.OpenFile(configFile, os.O_RDWR|os.O_CREATE, 0755)
 	if err != nil {
 		log.Panicln("Error: failed to open the config file 'kdb.yaml'")
