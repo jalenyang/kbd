@@ -1,4 +1,4 @@
-package main
+package helm
 
 import (
 	"context"
@@ -26,7 +26,7 @@ func (h HelmClient) Rollback() error {
 	return nil
 }
 
-func (h HelmClient) execHelmCommand(args ...string) error {
+func (h HelmClient) ExecHelmCommand(args ...string) error {
 	_, err := exec.LookPath("helm")
 	if err != nil {
 		log.Printf("Warning: helm is not available on your host")

@@ -1,6 +1,7 @@
-package main
+package config
 
 import (
+	"kbd/realm"
 	"testing"
 )
 
@@ -8,9 +9,9 @@ func TestLoadFromConfigFile(t *testing.T) {
 	want := KbdConfig{
 		AppName:    "kbd",
 		AppVersion: "0.0.1",
-		Realms:     []Realm{{Name: "kind-docker-desktop", Desc: "kind k8s cluster", KubeConfig: "config"}},
+		Realms:     []realm.Realm{{Name: "kind-docker-desktop", Desc: "kind k8s cluster", KubeConfig: "config"}},
 	}
-	kbdConfig, err := loadFromConfigFile("testdata/kbd.yaml")
+	kbdConfig, err := LoadFromConfigFile("testdata/kbd.yaml")
 
 	if err != nil {
 		t.FailNow()
@@ -27,18 +28,18 @@ func TestLoadFromConfigFile(t *testing.T) {
 }
 
 func TestSyncToConfigFile(t *testing.T) {
-	kConfig, err := loadFromConfigFile("testdata/kbd.yaml")
+	kConfig, err := LoadFromConfigFile("testdata/kbd.yaml")
 	if err != nil {
 		t.FailNow()
 	}
 
-	kbdConfig.Realms = append(kConfig.Realms, Realm{Name: "test", Desc: "desc", KubeConfig: "test_config"})
-	err = syncToConfigFile("testdata/kbd.yaml")
+	kbdConfig.Realms = append(kConfig.Realms, realm.Realm{Name: "test", Desc: "desc", KubeConfig: "test_config"})
+	err = SyncToConfigFile("testdata/kbd.yaml")
 	if err != nil {
 		t.FailNow()
 	}
 
-	kConfig, err = loadFromConfigFile("testdata/kbd.yaml")
+	kConfig, err = LoadFromConfigFile("testdata/kbd.yaml")
 	if err != nil {
 		t.FailNow()
 	}

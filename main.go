@@ -3,10 +3,14 @@ package main
 import (
 	"flag"
 	"fmt"
+	"kbd/config"
+	"kbd/e2e"
+	"kbd/helm"
+	rlm "kbd/realm"
 )
 
 var (
-	kbdConfig KbdConfig
+	kbdConfig config.KbdConfig
 )
 
 var (
@@ -20,33 +24,43 @@ var (
 )
 
 var Usage = func() {
-	fmt.Fprintln(flag.CommandLine.Output(), "Usage:  kbd [OPTIONS] COMMAND")
-	fmt.Fprintln(flag.CommandLine.Output(), "kubernetes based development toolkit")
-	fmt.Fprintln(flag.CommandLine.Output(), "Options:")
-	fmt.Fprintln(flag.CommandLine.Output(), "	-D	enable debug mode")
-	fmt.Fprintln(flag.CommandLine.Output(), "Commands:")
-	fmt.Fprintln(flag.CommandLine.Output(), "	realm 	realm management of the kbd")
-	fmt.Fprintln(flag.CommandLine.Output(), "	use 	active the realm")
-	fmt.Fprintln(flag.CommandLine.Output(), "	helm 	toolset support of the helm client")
+	flagOutput := flag.CommandLine.Output()
+	fmt.Fprintln(flagOutput, "Usage:  kbd [OPTIONS] COMMAND")
+	fmt.Fprintln(flagOutput, "kubernetes based development toolkit")
+	fmt.Fprintln(flagOutput, "Options:")
+	fmt.Fprintln(flagOutput, "	-d	enable debug mode")
+	fmt.Fprintln(flagOutput, "Commands:")
+	fmt.Fprintln(flagOutput, "	e2e 	manage the e2e tests in the kubernetes cluster")
+	fmt.Fprintln(flagOutput, "	realm 	manage the realms in the kbd")
+	fmt.Fprintln(flagOutput, "	helm 	manage the helm business in the kubernetes cluster")
 }
 
 func init() {
-	flag.StringVar(&realm, "realm", "", "The realm of the k8s cluster")
-	flag.StringVar(&use, "use", "", "set realm to be used")
 	flag.Usage = Usage
 }
 
 func main() {
 	flag.Parse()
 	action := flag.Arg(0)
+	var err error
+	kbdConfig, err = config.LoadFromConfigFile("kbd.yaml")
+	if err != nil {
+		panic("Failed to parse the configuration file")
+	}
 
 	switch action {
+	case "e2e":
+		e2e.CreateE2eFlagSet(flag.Args()[1:])
+		break
 	case "helm":
-		helmClient := HelmClient{}
-		loadFromConfigFile("kbd.yaml")
-		helmClient.execHelmCommand(flag.Args()[1:]...)
+		helmClient := helm.HelmClient{}
+		helmClient.ExecHelmCommand(flag.Args()[1:]...)
+		break
+	case "realm":
+		rlm.CreateRealmFlagSet(flag.Args()[1:])
+		break
 	default:
-		Usage()
+		flag.Usage()
 	}
 
 }
