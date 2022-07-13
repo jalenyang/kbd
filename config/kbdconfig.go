@@ -6,12 +6,24 @@ import (
 	"kbd/module"
 	"log"
 	"os"
+	"path"
 )
 
-var kbdConfig module.KbdConfig
+var (
+	configFile string
+)
+
+func init() {
+	home, err := os.UserHomeDir()
+	if err != nil {
+		log.Printf("failed to get the home dir %v", err)
+	}
+	configFile = path.Join(home, "kbd.yaml")
+}
 
 // LoadFromConfigFile parseConfig load the app config
-func LoadFromConfigFile(configFile string) (module.KbdConfig, error) {
+func LoadFromConfigFile() (module.KbdConfig, error) {
+	var kbdConfig module.KbdConfig
 	fi, err := os.OpenFile(configFile, os.O_RDWR|os.O_CREATE, 0755)
 	if err != nil {
 		log.Panicln("Error: failed to open the config file 'kdb.yaml'")
@@ -30,8 +42,8 @@ func LoadFromConfigFile(configFile string) (module.KbdConfig, error) {
 	return kbdConfig, err
 }
 
-func SyncToConfigFile(configFile string) error {
-	fi, err := os.OpenFile(configFile, os.O_RDWR|os.O_CREATE, 0755)
+func SyncToConfigFile(kbdConfig module.KbdConfig) error {
+	fi, err := os.OpenFile(configFile, os.O_RDWR|os.O_CREATE|os.O_TRUNC, 0755)
 	if err != nil {
 		log.Panicln("Error: failed to open the config file 'kdb.yaml'")
 	}

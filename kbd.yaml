@@ -5,3 +5,7 @@ realms:
     desc: "kind k8s cluster"
     kubeConfig: config
     active: true
+  - name: test
+    desc: "test"
+    kubeConfig: config
+    active: false

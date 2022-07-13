@@ -6,6 +6,7 @@ import (
 	"kbd/e2e"
 	"kbd/helm"
 	rlm "kbd/realm"
+	"log"
 )
 
 var Usage = func() {
@@ -37,8 +38,9 @@ func main() {
 		helmClient.ExecHelmCommand(flag.Args()[1:]...)
 		break
 	case "realm":
-		rlm.CreateRealmFlagSet(flag.Args()[1:])
-		rlm.RealManager()
+		if err := rlm.Operator(flag.Args()[1:]); err != nil {
+			log.Printf("realm failed for %v", err)
+		}
 		break
 	default:
 		flag.Usage()
