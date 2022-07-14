@@ -1,7 +1,7 @@
-appName: kdb
+appName: kbd
 appVersion: 0.0.1
 realms:
-  - name: kind-docker-desktop
-    desc: kind k8s cluster
-    kubeConfig: config
-    active: true
+    - name: kind-docker-desktop
+      desc: kind k8s cluster
+      kubeConfig: config
+      active: false
