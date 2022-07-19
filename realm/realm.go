@@ -27,6 +27,14 @@ var Usage = func() {
 	fmt.Fprintln(flagOutput, "	use	active the realm")
 }
 
+func init() {
+	var err error
+	kbdConfig, err = config.LoadFromConfigFile()
+	if err != nil {
+		panic("Failed to parse the configuration file")
+	}
+}
+
 func Operator(args []string) error {
 	fs := flag.NewFlagSet("realm", flag.ExitOnError)
 	if len(args) == 0 {
@@ -58,12 +66,18 @@ func Operator(args []string) error {
 	return nil
 }
 
-func init() {
-	var err error
-	kbdConfig, err = config.LoadFromConfigFile()
+func GetTheActiveRealm() (module.Realm, error) {
+	kbdConfig, err := config.LoadFromConfigFile()
 	if err != nil {
-		panic("Failed to parse the configuration file")
+		log.Printf("Error: configuration error %v", kbdConfig)
+		return module.Realm{}, err
 	}
+	for _, realm := range kbdConfig.Realms {
+		if realm.Active {
+			return realm, nil
+		}
+	}
+	return module.Realm{}, nil
 }
 
 func listRealms() error {

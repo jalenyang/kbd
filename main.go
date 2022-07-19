@@ -35,7 +35,7 @@ func main() {
 		break
 	case "helm":
 		helmClient := helm.HelmClient{}
-		helmClient.ExecHelmCommand(flag.Args()[1:]...)
+		helmClient.ExecHelmCommand(flag.Args()[1:])
 		break
 	case "realm":
 		if err := rlm.Operator(flag.Args()[1:]); err != nil {

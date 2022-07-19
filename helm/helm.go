@@ -2,6 +2,7 @@ package helm
 
 import (
 	"context"
+	"kbd/realm"
 	"log"
 	"os/exec"
 	"time"
@@ -26,8 +27,13 @@ func (h HelmClient) Rollback() error {
 	return nil
 }
 
-func (h HelmClient) ExecHelmCommand(args ...string) error {
-	_, err := exec.LookPath("helm")
+func (h HelmClient) ExecHelmCommand(args []string) error {
+	realm, err := realm.GetTheActiveRealm()
+	if err != nil {
+		log.Printf("Failed to get the active realm %v", err)
+	}
+	args = append(args, "--kubeconfig", realm.KubeConfig)
+	_, err = exec.LookPath("helm")
 	if err != nil {
 		log.Printf("Warning: helm is not available on your host")
 	}
