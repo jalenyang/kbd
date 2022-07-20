@@ -8,26 +8,26 @@ import (
 	"time"
 )
 
-type HelmClient struct {
+type Client struct {
 }
 
-func (h HelmClient) Install() error {
+func (h Client) Install() error {
 	return nil
 }
 
-func (h HelmClient) Uninstall() error {
+func (h Client) Uninstall() error {
 	return nil
 }
 
-func (h HelmClient) Upgrade() error {
+func (h Client) Upgrade() error {
 	return nil
 }
 
-func (h HelmClient) Rollback() error {
+func (h Client) Rollback() error {
 	return nil
 }
 
-func (h HelmClient) ExecHelmCommand(args []string) error {
+func (h Client) ExecHelmCommand(args []string) error {
 	realm, err := realm.GetTheActiveRealm()
 	if err != nil {
 		log.Printf("Failed to get the active realm %v", err)

@@ -31,10 +31,10 @@ func main() {
 
 	switch action {
 	case "e2e":
-		e2e.CreateE2eFlagSet(flag.Args()[1:])
+		e2e.Operator(flag.Args()[1:])
 		break
 	case "helm":
-		helmClient := helm.HelmClient{}
+		helmClient := helm.Client{}
 		helmClient.ExecHelmCommand(flag.Args()[1:])
 		break
 	case "realm":
