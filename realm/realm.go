@@ -54,6 +54,7 @@ func Operator(args []string) error {
 		fs.StringVar(&ram.Name, "name", "", "name of the realm")
 		fs.StringVar(&ram.Desc, "desc", "", "desc of the realm")
 		fs.StringVar(&ram.KubeConfig, "kubeconfig", "", "kubeconfig path of the k8s cluster")
+		fs.StringVar(&ram.E2eTestApi, "e2eTestApi", "", "e2e test endpoint in the k8s cluster")
 		fs.Parse(args[1:])
 		return setRealm(ram)
 	case "use":

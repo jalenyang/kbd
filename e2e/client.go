@@ -22,7 +22,7 @@ func CreateFromKbdConfig() (Client, error) {
 		log.Printf("Failed create the e2e client: %v", err)
 		return Client{}, err
 	}
-	return Client{e2eApi: realm.A2eTestApi}, nil
+	return Client{e2eApi: realm.E2eTestApi}, nil
 }
 
 func (c *Client) renderApi(apiName string) string {

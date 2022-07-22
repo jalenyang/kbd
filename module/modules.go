@@ -11,5 +11,5 @@ type Realm struct {
 	Desc       string `yaml:"desc"`
 	KubeConfig string `yaml:"kubeConfig"`
 	Active     bool   `yaml:"active"`
-	A2eTestApi string `yaml:"e2eTestApi"`
+	E2eTestApi string `yaml:"e2eTestApi"`
 }
