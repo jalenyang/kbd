@@ -100,18 +100,27 @@ func (c *Client) Results() error {
 		fmt.Fprintln(os.Stdout, fmt.Sprintf("send the request failed for %v", err))
 		return err
 	}
-	defer res.Body.Close()
-	results, err := io.ReadAll(res.Body)
-	targetDir := path.Join(os.TempDir(), "results.zip")
 
-	fi, err := os.OpenFile(targetDir, os.O_RDWR|os.O_CREATE, 0655)
-	if err != nil {
-		log.Panicln("Error: failed to save the results file")
-	}
-	_, err = fi.Write(results)
-	if err != nil {
-		log.Panicln("Error: failed to save the results file")
-	}
-	fmt.Fprintln(os.Stdout, fmt.Sprintf("saved the results package to %s", targetDir))
+	defer res.Body.Close()
+	done := make(chan bool)
+	go func() {
+		fmt.Fprintln(os.Stdout, "Start to download the results package")
+		results, err := io.ReadAll(res.Body)
+		path.Join()
+		targetDir := path.Join(os.TempDir(), "results.zip")
+
+		fi, err := os.OpenFile(targetDir, os.O_RDWR|os.O_CREATE, 0655)
+		if err != nil {
+			log.Println("Error: failed to save the results file")
+		}
+		_, err = fi.Write(results)
+		if err != nil {
+			log.Println("Error: failed to save the results file")
+		}
+		fmt.Fprintln(os.Stdout, fmt.Sprintf("saved the results package to %s", targetDir))
+		done <- true
+	}()
+
+	<-done
 	return err
 }
