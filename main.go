@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"kbd/e2e"
 	"kbd/helm"
+	"kbd/k8s"
 	rlm "kbd/realm"
 	"log"
 )
@@ -19,6 +20,7 @@ var Usage = func() {
 	fmt.Fprintln(flagOutput, "	e2e 	manage the e2e tests in the kubernetes cluster")
 	fmt.Fprintln(flagOutput, "	realm 	manage the realms in the kbd")
 	fmt.Fprintln(flagOutput, "	helm 	manage the helm business in the kubernetes cluster")
+	fmt.Fprintln(flagOutput, "	k8s 	manage the kubernetes cluster")
 }
 
 func init() {
@@ -41,6 +43,9 @@ func main() {
 		if err := rlm.Operator(flag.Args()[1:]); err != nil {
 			log.Printf("realm failed for %v", err)
 		}
+		break
+	case "k8s":
+		k8s.ExecK8sCommand(flag.Args()[1:])
 		break
 	default:
 		flag.Usage()

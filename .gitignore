@@ -17,3 +17,6 @@
 #IDE
 *idea
 *.iml
+
+# builds dir
+builds
